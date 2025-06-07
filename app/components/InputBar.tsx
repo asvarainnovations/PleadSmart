@@ -17,6 +17,27 @@ interface InputBarProps {
   onSendMessage: (message: string) => void;
 }
 
+// Minimal type for speech recognition event
+interface SpeechRecognitionResultEvent {
+  results: {
+    [index: number]: {
+      [index: number]: {
+        transcript: string;
+      };
+    };
+  };
+}
+
+// Minimal type for SpeechRecognition constructor
+type SpeechRecognitionType = {
+  new (): {
+    continuous: boolean;
+    interimResults: boolean;
+    onresult: ((event: unknown) => void) | null;
+    start: () => void;
+  };
+};
+
 export default function InputBar({ onSendMessage }: InputBarProps) {
   const [message, setMessage] = useState('');
   const [showPrompts, setShowPrompts] = useState(false);
@@ -60,17 +81,26 @@ export default function InputBar({ onSendMessage }: InputBarProps) {
   };
 
   const handleVoiceInput = () => {
-    if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
-      const recognition = new (window as any).webkitSpeechRecognition();
-      recognition.continuous = false;
-      recognition.interimResults = false;
+    if (typeof window !== 'undefined') {
+      const SpeechRecognitionConstructor =
+        (window as typeof window & { webkitSpeechRecognition?: SpeechRecognitionType; SpeechRecognition?: SpeechRecognitionType }).webkitSpeechRecognition ||
+        (window as typeof window & { SpeechRecognition?: SpeechRecognitionType }).SpeechRecognition;
 
-      recognition.onresult = (event: any) => {
-        const transcript = event.results[0][0].transcript;
-        setMessage(transcript);
-      };
+      if (SpeechRecognitionConstructor) {
+        const recognition = new SpeechRecognitionConstructor();
+        recognition.continuous = false;
+        recognition.interimResults = false;
 
-      recognition.start();
+        recognition.onresult = (event: unknown) => {
+          const speechEvent = event as SpeechRecognitionResultEvent;
+          const transcript = speechEvent.results[0][0].transcript;
+          setMessage(transcript);
+        };
+
+        recognition.start();
+      } else {
+        console.error('Speech recognition not supported');
+      }
     } else {
       console.error('Speech recognition not supported');
     }

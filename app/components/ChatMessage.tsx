@@ -18,7 +18,7 @@ export default function ChatMessage({ content, isUser, timestamp }: ChatMessageP
     try {
       await navigator.clipboard.writeText(content);
       toast.success('Message copied to clipboard');
-    } catch (err) {
+    } catch {
       toast.error('Failed to copy message');
     }
   };

@@ -19,7 +19,7 @@ interface Conversation {
 export default function Sidebar() {
   const [isExpanded, setIsExpanded] = useState(false);
   const isMobile = useMediaQuery({ maxWidth: 768 });
-  const [conversations, setConversations] = useState<Conversation[]>([
+  const [conversations] = useState<Conversation[]>([
     { id: '1', title: 'Case Analysis: Smith vs. State', date: '2024-03-20' },
     { id: '2', title: 'Legal Research: Property Law', date: '2024-03-19' },
   ]);
