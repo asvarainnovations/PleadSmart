@@ -1,26 +1,89 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #121212;
+  --chat-bubble: #1E1E1E;
+  --accent: #2979FF;
+  --text-primary: #FFFFFF;
+  --text-secondary: #A0A0A0;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    @apply bg-[#121212] text-white;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .sidebar {
+    @apply fixed left-0 top-0 h-full bg-[#1E1E1E] transition-all duration-300 ease-in-out;
+  }
+
+  .sidebar-collapsed {
+    @apply w-16;
+  }
+
+  .sidebar-expanded {
+    @apply w-64;
+  }
+
+  .chat-bubble {
+    @apply rounded-lg p-4 max-w-[80%] transition-all duration-200;
+  }
+
+  .chat-bubble-user {
+    @apply bg-[#2979FF] ml-auto;
+  }
+
+  .chat-bubble-ai {
+    @apply bg-[#1E1E1E];
+  }
+
+  .input-bar {
+    @apply fixed bottom-0 left-0 right-0 p-4 bg-[#1E1E1E] border-t border-gray-800;
+  }
+
+  .btn-primary {
+    @apply bg-[#2979FF] hover:bg-[#1a68e8] text-white px-4 py-2 rounded-lg transition-all duration-200;
+  }
+
+  .btn-icon {
+    @apply p-2 rounded-lg hover:bg-gray-700 transition-all duration-200;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1E1E1E;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #444;
 }
